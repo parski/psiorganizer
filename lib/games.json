@@ -1,0 +1,22 @@
+{
+  "SLUS-00975": {
+    "title": "007 - Tomorrow Never Dies",
+    "region": "NTSC-U"
+  },
+  "SLUS-00594": {
+    "title": "Metal Gear Solid",
+    "region": "NTSC-U",
+    "disc": {
+      "number": 1,
+      "total": 2
+    }
+  },
+  "SLUS-00776": {
+    "title": "Metal Gear Solid",
+    "region": "NTSC-U",
+    "disc": {
+      "number": 2,
+      "total": 2
+    }
+  }
+}
