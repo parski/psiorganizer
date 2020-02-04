@@ -1,4 +1,4 @@
-# psiorganizer
+![](logo.png)
 
 File organizer for [PS-IO](https://ps-io.com/).
 
