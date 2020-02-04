@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import glob
 import hashlib
 import json
 import os
@@ -24,35 +25,24 @@ parser.add_argument("-o", "--output",
             required=True,
             help="set output directory")
 
+parser.add_argument("-s", "--strict",
+            dest="halt_on_missing",
+            required=False,
+            help="halts process if unable to match a file")
+
 ARGS = parser.parse_args()
 
-# Initialize Hash Identifier Map
+# Initialize Hash Serial Map
 
-identifiers = {}
+serials = {}
 with open('../lib/hashes.json') as hashes_json:
-    identifiers = json.load(hashes_json)
+    serials = json.load(hashes_json)
 
-# Initialize Identifier Game Map
+# Initialize Serial Game Map
 
 games = {}
 with open('../lib/games.json') as games_json:
     games = json.load(games_json)
-
-#
-
-def identifier_for_hash(hash):
-    return identifiers[hash]
-
-def game_for_identifier(identifier):
-    return games[identifier]
-
-def path_for_game(game):
-    return os.path.abspath(ARGS.output_directory + '/' + game['region'] + '/' + game['title'] )
-
-def cover_for_identifier(identifier):
-    return os.path.abspath('../covers/' + identifier + '.bmp')
-
-# def multidisc(game):
 
 # File Management
 
@@ -86,26 +76,54 @@ def extract_file(filename, entry, method, dest):
 
 # Process
 
+def formatted_file_name(game, file):
+    try:
+        return game['title'] + ' (Disc ' + str(game['disc']['number']) + ')' + os.path.splitext(file)[1]
+    except KeyError:
+        return game['title'] + os.path.splitext(file)[1]    
+
 def process(file):
-    identifier = identifier_for_hash(hash(file))
+    try:
+        serial = serials[hash(file)]
+        try: 
+            game = games[serial]
 
-    game = game_for_identifier(identifier)
-    print('Importing ' + game["title"] + ' [' + identifier + ']')
+            print('Importing ' + file + ' as ' + game["title"] + ' [' + serial + ']')
 
+            path = os.path.abspath(ARGS.output_directory + '/' + game['region'] + '/' + game['title'] )
 
-    cover = cover_for_identifier(identifier)
+            if not os.path.exists(path):
+                os.makedirs(path)
 
+            # Copy file to proper location
+            file_destination_path = path + '/' + formatted_file_name(game, file)
+            if not os.path.exists(file_destination_path):
+                copy_file(file, file_destination_path)
 
-    path = path_for_game(game)
-
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-    destination_path = path + '/' + game['title'] + os.path.splitext(file)[1]
-    copy_file(file, destination_path)
-
-    # copy_file(file, path, game)
+            # Copy cover
+            cover_source_path = os.path.abspath('../covers/' + serial + '.bmp')
+            cover_destination_path = path + '/COVER.BMP'
+            if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
+                copy_file(cover_source_path, cover_destination_path)
+        except KeyError:
+            print('Error: No entry found for serial ' + serial + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
+            if ARGS.halt_on_missing:
+                exit(1)
+    except KeyError:
+        print('Error: No entry found for hash ' + hash(file) + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
+        if ARGS.halt_on_missing:
+            exit(1)
 
 # Main
 
-process(ARGS.source_directory)
+file_paths = list()
+for (path, directories, file_names) in os.walk(ARGS.source_directory):
+    file_paths += [os.path.join(path, file) for file in file_names]
+
+for file_path in file_paths:
+    file = os.path.abspath(file_path)
+    if file.endswith('.bin') or file.endswith('.cue') or file.endswith('.iso') or file.endswith('.img'):
+        process(file)
+        continue
+    else:
+        continue
