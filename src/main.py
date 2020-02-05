@@ -61,7 +61,6 @@ def copy_file(source, destination):
         fixed_destination = u'\\\\?\\' + os.path.abspath(destination)
         shutil.copyfile(source, fixed_destination)
 
-
 # Process
 
 def formatted_file_name(game, file):
@@ -69,6 +68,12 @@ def formatted_file_name(game, file):
         return game['title'] + ' (Disc ' + str(game['disc']['number']) + ')' + os.path.splitext(file)[1]
     except KeyError:
         return game['title'] + os.path.splitext(file)[1]    
+
+def process_cover(path, serial):
+    cover_source_path = os.path.abspath('../covers/' + serial + '.bmp')
+    cover_destination_path = path + '/COVER.BMP'
+    if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
+        copy_file(cover_source_path, cover_destination_path)
 
 def multidisc_for_game(game, extension):
     try: 
@@ -80,15 +85,23 @@ def multidisc_for_game(game, extension):
     except KeyError:
         return None
 
+def process_multidisc(path, game, extension):
+    multidisk_destination_path = path + '/MULTIDISC.LST'
+    if not os.path.exists(multidisk_destination_path):
+        if extension == '.bin' or extension == '.iso' or extension == '.img':
+            multidisc = multidisc_for_game(game, os.path.splitext(file)[1])
+            if not multidisc == None:
+                with open(multidisk_destination_path, 'w') as multidisc_file:
+                    multidisc_file.write(multidisc)
+                    multidisc_file.close()
+
 def process(file):
     try:
         serial = serials[hash(file)]
         try: 
             game = games[serial]
-
             print('Importing ' + file + ' as ' + game['title'] + ' [' + serial + ']')
-
-            path = os.path.abspath(ARGS.output_directory + '/' + game['region'] + '/' + game['title'] )
+            path = os.path.abspath(ARGS.output_directory + '/' + game['title'] + ' (' + game['region'] + ')')
 
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -98,22 +111,8 @@ def process(file):
             if not os.path.exists(file_destination_path):
                 copy_file(file, file_destination_path)
 
-            # Copy cover
-            cover_source_path = os.path.abspath('../covers/' + serial + '.bmp')
-            cover_destination_path = path + '/COVER.BMP'
-            if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
-                copy_file(cover_source_path, cover_destination_path)
-
-            # Generate Multidisc
-            multidisk_destination_path = path + '/MULTIDISC.LST'
-            if not os.path.exists(multidisk_destination_path):
-                extension = os.path.splitext(file)[1]
-                if extension == '.bin' or extension == '.iso' or extension == '.img':
-                    multidisc = multidisc_for_game(game, os.path.splitext(file)[1])
-                    if not multidisc == None:
-                        with open(multidisk_destination_path, 'w') as multidisc_file:
-                            multidisc_file.write(multidisc)
-                            multidisc_file.close()
+            process_cover(path, serial)
+            process_multidisc(path, game, os.path.splitext(file)[1])
         except KeyError:
             print('Error: No entry found for serial ' + serial + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
             if ARGS.halt_on_missing:
