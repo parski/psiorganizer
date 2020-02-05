@@ -130,7 +130,8 @@ for (path, directories, file_names) in os.walk(ARGS.source_directory):
 
 for file_path in file_paths:
     file = os.path.abspath(file_path)
-    if file.endswith('.bin') or file.endswith('.cue') or file.endswith('.iso') or file.endswith('.img'):
+    extension = os.path.splitext(file)[1].lower()
+    if extension == '.bin' or extension == '.cue' or extension == '.iso' or extension == '.img':
         process(file)
         continue
     else:
@@ -138,5 +139,4 @@ for file_path in file_paths:
 
 # Todo:
 # - Lowercase/uppercase a lot of things
-# - Use os.path on all paths so they work on Windows???
 # - Use cue2cu2
