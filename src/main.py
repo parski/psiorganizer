@@ -35,13 +35,13 @@ ARGS = parser.parse_args()
 # Initialize Hash Serial Map
 
 serials = {}
-with open('../lib/hashes.json') as hashes_json:
+with open('../lib/hashes.json', 'r') as hashes_json:
     serials = json.load(hashes_json)
 
 # Initialize Serial Game Map
 
 games = {}
-with open('../lib/games.json') as games_json:
+with open('../lib/games.json', 'r') as games_json:
     games = json.load(games_json)
 
 # File Management
@@ -62,18 +62,6 @@ def copy_file(source, destination):
         shutil.copyfile(source, fixed_destination)
 
 
-def extract_file(filename, entry, method, dest):
-    if method == 'zip':
-        try:
-            zipfile.ZipFile(filename).extract(entry, os.path.dirname(dest))
-            filename = os.path.join(os.path.dirname(dest), entry)
-            if filename != dest:
-                os.replace(filename, dest)
-        except FileNotFoundError:
-            # Windows' default API is limited to paths of 260 characters
-            fixed_dest = u'\\\\?\\' + os.path.abspath(dest)
-            zipfile.ZipFile(filename).extract(entry, os.path.dirname(fixed_dest))
-
 # Process
 
 def formatted_file_name(game, file):
@@ -82,13 +70,23 @@ def formatted_file_name(game, file):
     except KeyError:
         return game['title'] + os.path.splitext(file)[1]    
 
+def multidisc_for_game(game, extension):
+    try: 
+        total = game['disc']['total']
+        multidisc = game['title'] + ' (Disc 1)' + extension + '\n'
+        for number in range(2, total + 1):
+            multidisc = multidisc + game['title'] + ' (Disc ' + str(number) + ')' + extension + '\n'
+        return multidisc
+    except KeyError:
+        return None
+
 def process(file):
     try:
         serial = serials[hash(file)]
         try: 
             game = games[serial]
 
-            print('Importing ' + file + ' as ' + game["title"] + ' [' + serial + ']')
+            print('Importing ' + file + ' as ' + game['title'] + ' [' + serial + ']')
 
             path = os.path.abspath(ARGS.output_directory + '/' + game['region'] + '/' + game['title'] )
 
@@ -105,6 +103,17 @@ def process(file):
             cover_destination_path = path + '/COVER.BMP'
             if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
                 copy_file(cover_source_path, cover_destination_path)
+
+            # Generate Multidisc
+            multidisk_destination_path = path + '/MULTIDISC.LST'
+            if not os.path.exists(multidisk_destination_path):
+                extension = os.path.splitext(file)[1]
+                if extension == '.bin' or extension == '.iso' or extension == '.img':
+                    multidisc = multidisc_for_game(game, os.path.splitext(file)[1])
+                    if not multidisc == None:
+                        with open(multidisk_destination_path, 'w') as multidisc_file:
+                            multidisc_file.write(multidisc)
+                            multidisc_file.close()
         except KeyError:
             print('Error: No entry found for serial ' + serial + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
             if ARGS.halt_on_missing:
@@ -127,3 +136,8 @@ for file_path in file_paths:
         continue
     else:
         continue
+
+# Todo:
+# - Lowercase/uppercase a lot of things
+# - Use os.path on all paths so they work on Windows???
+# - Use cue2cu2
