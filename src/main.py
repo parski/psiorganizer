@@ -35,13 +35,13 @@ ARGS = parser.parse_args()
 # Initialize Hash Serial Map
 
 serials = {}
-with open('../lib/hashes.json', 'r') as hashes_json:
+with open(os.path.abspath('../lib/hashes.json'), 'r') as hashes_json:
     serials = json.load(hashes_json)
 
 # Initialize Serial Game Map
 
 games = {}
-with open('../lib/games.json', 'r') as games_json:
+with open(os.path.abspath('../lib/games.json'), 'r') as games_json:
     games = json.load(games_json)
 
 # File Management
@@ -71,7 +71,7 @@ def formatted_file_name(game, file):
 
 def process_cover(path, serial):
     cover_source_path = os.path.abspath('../covers/' + serial + '.bmp')
-    cover_destination_path = path + '/COVER.BMP'
+    cover_destination_path = os.path.abspath(path + '/COVER.BMP')
     if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
         copy_file(cover_source_path, cover_destination_path)
 
@@ -86,7 +86,7 @@ def multidisc_for_game(game, extension):
         return None
 
 def process_multidisc(path, game, extension):
-    multidisk_destination_path = path + '/MULTIDISC.LST'
+    multidisk_destination_path = os.path.abspath(path + '/MULTIDISC.LST')
     if not os.path.exists(multidisk_destination_path):
         if extension == '.bin' or extension == '.iso' or extension == '.img':
             multidisc = multidisc_for_game(game, os.path.splitext(file)[1])
@@ -107,7 +107,7 @@ def process(file):
                 os.makedirs(path)
 
             # Copy file to proper location
-            file_destination_path = path + '/' + formatted_file_name(game, file)
+            file_destination_path = os.path.abspath(path + '/' + formatted_file_name(game, file))
             if not os.path.exists(file_destination_path):
                 copy_file(file, file_destination_path)
 
