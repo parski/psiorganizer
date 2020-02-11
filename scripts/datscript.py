@@ -56,7 +56,6 @@ with open(os.path.abspath('discs.json'), 'w') as output_file:
                 disc_number = game_disc(game_name)
                 if disc_number:
                     if not 'discs' in discs['games'][stripped_name]:
-                        print(game_name)
                         discs['games'][stripped_name]['discs'] = int(disc_number)
                     else:
                         previous_total = discs['games'][stripped_name]['discs']
