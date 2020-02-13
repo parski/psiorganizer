@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+from binmerge import binmerge
 import glob
 import hashlib
 import json
@@ -25,28 +26,27 @@ parser.add_argument("-o", "--output",
             required=True,
             help="set output directory")
 
-parser.add_argument("-s", "--strict",
-            dest="halt_on_missing",
-            required=False,
-            help="halts process if unable to match a file")
+parser.add_argument("-m", "--hashes",
+            dest="hashes_file",
+            required=True,
+            help="path to hashes file")
+
+parser.add_argument("-d", "--discs",
+            dest="discs_file",
+            required=True,
+            help="path to discs file")
 
 ARGS = parser.parse_args()
 
-# Initialize Hash Serial Map
+# Initialize Hash Game Map
 
-serials = {}
-with open(os.path.abspath('../lib/hashes.json'), 'r') as hashes_json:
-    serials = json.load(hashes_json)
-
-# Initialize Serial Game Map
-
-games = {}
-with open(os.path.abspath('../lib/games.json'), 'r') as games_json:
-    games = json.load(games_json)
+hashes = {}
+with open(os.path.abspath(ARGS.hashes_file), 'r') as file:
+    hashes = json.load(file)
 
 # File Management
 
-def hash(file):
+def md5(file):
     hash_md5 = hashlib.md5()
     with open(file, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
@@ -95,48 +95,35 @@ def process_multidisc(path, game, extension):
                     multidisc_file.write(multidisc)
                     multidisc_file.close()
 
-def process(file):
-    try:
-        serial = serials[hash(file)]
-        try: 
-            game = games[serial]
-            print('Importing ' + file + ' as ' + game['title'] + ' [' + serial + ']')
-            path = os.path.abspath(ARGS.output_directory + '/' + game['title'] + ' (' + game['region'] + ')')
+def file_name_without_extension(hash):
+    if hash in hashes['hashes']:
+        game = hashes['hashes'][hash]
+        if game['disc']['total'] > 1:
+            return game['name'] + ' (Disc ' + str(game['disc']['number']) + ')'
+        return game['name']
 
-            if not os.path.exists(path):
-                os.makedirs(path)
 
-            # Copy file to proper location
-            file_destination_path = os.path.abspath(path + '/' + formatted_file_name(game, file))
-            if not os.path.exists(file_destination_path):
-                copy_file(file, file_destination_path)
-
-            process_cover(path, serial)
-            process_multidisc(path, game, os.path.splitext(file)[1])
-        except KeyError:
-            print('Error: No entry found for serial ' + serial + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
-            if ARGS.halt_on_missing:
-                exit(1)
-    except KeyError:
-        print('Error: No entry found for hash ' + hash(file) + ' \nFile ' + file + '\nFeel free to add the missing entry and contribute on GitHub: https://github.com/parski/psiorganizer')
-        if ARGS.halt_on_missing:
-            exit(1)
-
+def process_directory(directory):
+    for (path, directories, files) in os.walk(directory):
+        for file in files:
+            extension = os.path.splitext(file)[1]
+            if extension == '.cue':
+                hash = md5(os.path.abspath(path + '/' + file))
+                if hash in hashes['hashes']:
+                    game = hashes['hashes'][hash]
+                    output_path = os.path.abspath(ARGS.output_directory + '/' + game['name'])
+                    if not os.path.exists(output_path):
+                        os.makedirs(output_path)
+                    binmerge(os.path.abspath(directory + '/' + file), file_name_without_extension(hash), output_path)
 # Main
 
-file_paths = list()
+directory_paths = list()
 for (path, directories, file_names) in os.walk(ARGS.source_directory):
-    file_paths += [os.path.join(path, file) for file in file_names]
-
-for file_path in file_paths:
-    file = os.path.abspath(file_path)
-    extension = os.path.splitext(file)[1].lower()
-    if extension == '.bin' or extension == '.cue' or extension == '.iso' or extension == '.img':
-        process(file)
-        continue
-    else:
-        continue
+    directory_paths = [os.path.join(path, directory) for directory in directories]
+    for directory_path in directory_paths:
+        process_directory(directory_path)
 
 # Todo:
-# - Lowercase/uppercase a lot of things
 # - Use cue2cu2
+# - Generate multidisc
+# - Cover
