@@ -3,6 +3,7 @@
 
 import argparse
 from binmerge import binmerge
+from cue2cu2 import cu2
 import glob
 import hashlib
 import json
@@ -121,6 +122,7 @@ def process_directory(directory):
                     if not os.path.exists(output_path):
                         os.makedirs(output_path)
                     binmerge(os.path.abspath(directory + '/' + file), file_name_without_extension(hash), output_path)
+                    cu2(os.path.abspath(output_path + '/' + file_name_without_extension(hash) + '.cue'))
                     total_discs = discs['games'][game_name]['discs']
                     if total_discs > 1:
                         process_multidisc(output_path, game_name, total_discs)
@@ -133,5 +135,4 @@ for (path, directories, file_names) in os.walk(ARGS.source_directory):
         process_directory(directory_path)
 
 # Todo:
-# - Use cue2cu2
 # - Cover
