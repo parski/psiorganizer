@@ -44,6 +44,12 @@ hashes = {}
 with open(os.path.abspath(ARGS.hashes_file), 'r') as file:
     hashes = json.load(file)
 
+# Initialize Discs Map
+
+discs = {}
+with open(os.path.abspath(ARGS.discs_file), 'r') as file:
+    discs = json.load(file)
+
 # File Management
 
 def md5(file):
@@ -75,25 +81,24 @@ def process_cover(path, serial):
     if os.path.exists(cover_source_path) and not os.path.exists(cover_destination_path):
         copy_file(cover_source_path, cover_destination_path)
 
-def multidisc_for_game(game, extension):
+def multidisc_for_game(name, total_discs):
     try: 
-        total = game['disc']['total']
-        multidisc = game['title'] + ' (Disc 1)' + extension + '\n'
-        for number in range(2, total + 1):
-            multidisc = multidisc + game['title'] + ' (Disc ' + str(number) + ')' + extension + '\n'
+        multidisc = name + ' (Disc 1).bin'
+        for number in range(2, total_discs + 1):
+            multidisc = multidisc + '\n' + name + ' (Disc ' + str(number) + ').bin'
+        multidisc = multidisc + '\r\n' # Needs to end with CR + LF
         return multidisc
     except KeyError:
         return None
 
-def process_multidisc(path, game, extension):
+def process_multidisc(path, name, total_discs):
     multidisk_destination_path = os.path.abspath(path + '/MULTIDISC.LST')
     if not os.path.exists(multidisk_destination_path):
-        if extension == '.bin' or extension == '.iso' or extension == '.img':
-            multidisc = multidisc_for_game(game, os.path.splitext(file)[1])
-            if not multidisc == None:
-                with open(multidisk_destination_path, 'w') as multidisc_file:
-                    multidisc_file.write(multidisc)
-                    multidisc_file.close()
+        multidisc = multidisc_for_game(name, total_discs)
+        if not multidisc == None:
+            with open(multidisk_destination_path, 'w') as multidisc_file:
+                multidisc_file.write(multidisc)
+                multidisc_file.close()
 
 def file_name_without_extension(hash):
     if hash in hashes['hashes']:
@@ -111,10 +116,14 @@ def process_directory(directory):
                 hash = md5(os.path.abspath(path + '/' + file))
                 if hash in hashes['hashes']:
                     game = hashes['hashes'][hash]
-                    output_path = os.path.abspath(ARGS.output_directory + '/' + game['name'])
+                    game_name = game['name']
+                    output_path = os.path.abspath(ARGS.output_directory + '/' + game_name)
                     if not os.path.exists(output_path):
                         os.makedirs(output_path)
                     binmerge(os.path.abspath(directory + '/' + file), file_name_without_extension(hash), output_path)
+                    total_discs = discs['games'][game_name]['discs']
+                    if total_discs > 1:
+                        process_multidisc(output_path, game_name, total_discs)
 # Main
 
 directory_paths = list()
@@ -125,5 +134,4 @@ for (path, directories, file_names) in os.walk(ARGS.source_directory):
 
 # Todo:
 # - Use cue2cu2
-# - Generate multidisc
 # - Cover

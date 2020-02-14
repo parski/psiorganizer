@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Sony - PlayStation</name>
+		<description>Sony - PlayStation - Discs (10197) (2020-02-02 14-48-15)</description>
+		<version>2020-02-02 14-48-15</version>
+		<date>2020-02-02 14-48-15</date>
+		<author>redump.org</author>
+		<homepage>redump.org</homepage>
+		<url>http://redump.org/</url>
+	</header>
+	<game name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave)">
+		<category>Games</category>
+		<description>Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave)</description>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave).cue" size="1665" crc="9b6b36a2" md5="327bc819bc3f2b61566fee1fe37e459a" sha1="d33d0939479c5e2cfd6d8b6fbf9271f4de3e8ac6"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 01).bin" size="62455008" crc="a9fa94b7" md5="662d6ee7104baee4a33595906c4d497c" sha1="6af088f29ea3b4d12f5f4c2563d9734f1b065676"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 02).bin" size="23249520" crc="b55b3628" md5="eabda2f602b9543c7c471b9ed9f6c6d0" sha1="2fedaa376c616eb2837dd00977c06784f963837c"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 03).bin" size="25594464" crc="acc7c35a" md5="248df1bd4a1ea3e9dfc5e59771c9a915" sha1="4bc6ac8925fc2f7bbaca4c809fec0734670b5256"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 04).bin" size="25994304" crc="2df2cff6" md5="114234268b89742f79a42ab3dcd33643" sha1="c65154187c503e8285469dc4ddac30a74c48581e"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 05).bin" size="24392592" crc="beaa4bc7" md5="9634cbd16c7e76fce913743033b9645a" sha1="884a28d4ad731200c09d0d1382acc452ad394eae"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 06).bin" size="30717120" crc="18bc2c45" md5="674f3eef6b613d151e294ac77caaddee" sha1="1e8dee554135f44fa849c1a479c3a37299e084b6"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 07).bin" size="32911536" crc="6a7deebe" md5="3f8959dfd825c12d40ddc9fe6a7adb9a" sha1="8f07c99d76276495308c86ee8a49c22ac43ded6d"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 08).bin" size="29487024" crc="040816e6" md5="96b705d4fbf91630f99918edf71dbde0" sha1="4b8ae39cfb8d2ac0f75f7dc498aa67de8541a7a4"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 09).bin" size="21579600" crc="bf8e4b47" md5="6a1b5e1dee388e26c5a4f78de28daeae" sha1="dbeb1802dd64bfddafb88d5988a4e03274cc50da"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 10).bin" size="27259680" crc="ca6d6392" md5="7ca811be7ebbcb031bbabffbee54e919" sha1="82f3e553ce69d58fcd20d3264be28b0a68c37480"/>
+		<rom name="Kenki Ippatsu! Crane Master ni Narou! (Japan) (Major Wave) (Track 11).bin" size="61650624" crc="48a51765" md5="1d9355a22c2695037c72056a01dc13c2" sha1="d2afe4ff25c40a2b9ad89fc1ccf42984c6c5a615"/>
+	</game>
+	<game name="Psychic Force 2 (Japan) (Demo)">
+		<category>Demos</category>
+		<description>Psychic Force 2 (Japan) (Demo)</description>
+		<rom name="Psychic Force 2 (Japan) (Demo).cue" size="230" crc="cc2a1aa0" md5="49564a52ca2a9c813e2e630d70e985e6" sha1="c5dbb109ca4faac491507b38fae19324d804c18e"/>
+		<rom name="Psychic Force 2 (Japan) (Demo) (Track 1).bin" size="581327376" crc="b4bbdabd" md5="eb08f9298712dbc4ec9cfb3b08585d49" sha1="ecbe26821e13d0a844411037aaf84e29f5614b5b"/>
+		<rom name="Psychic Force 2 (Japan) (Demo) (Track 2).bin" size="33868800" crc="3f9896b3" md5="441eeb4204aafc104bf1863b743a13a2" sha1="a55870eae893408b85b4274d19e349a7a447b84b"/>
+	</game>
+	<game name="Resident Evil 2 (USA) (Disc 1)">
+		<category>Games</category>
+		<description>Resident Evil 2 (USA) (Disc 1)</description>
+		<rom name="Resident Evil 2 (USA) (Disc 1).cue" size="230" crc="8139e98b" md5="a4c12e174f9e898900a3547e47dcb3d6" sha1="158a27a6ded7ab99186dcbf876d7a4ee0b12b987"/>
+		<rom name="Resident Evil 2 (USA) (Disc 1) (Track 1).bin" size="619490928" crc="940c0934" md5="4437085e6f69c34a73247ab66f63215e" sha1="289af72d48c8758bca46b7fedef97a88ea376bde"/>
+		<rom name="Resident Evil 2 (USA) (Disc 1) (Track 2).bin" size="37396800" crc="7976083e" md5="2d7b5e8e94a91bf5423b2356f6a34863" sha1="d9f92af296360772e62caa4cb276de3fa74f5538"/>
+	</game>
+	<game name="Resident Evil 2 (USA) (Disc 2)">
+		<category>Games</category>
+		<description>Resident Evil 2 (USA) (Disc 2)</description>
+		<rom name="Resident Evil 2 (USA) (Disc 2).cue" size="230" crc="d7590ad1" md5="55ededaf4d46eb0cceb4da34412471c3" sha1="6c69001ecee3d3489eef3cc1ddb9e8a7eaac92ed"/>
+		<rom name="Resident Evil 2 (USA) (Disc 2) (Track 1).bin" size="627927552" crc="943d695e" md5="d6817bd3872994a17a9338537eb3fc05" sha1="d18e962d473a3e0f42315115f7c3e11912e0694d"/>
+		<rom name="Resident Evil 2 (USA) (Disc 2) (Track 2).bin" size="37396800" crc="7976083e" md5="2d7b5e8e94a91bf5423b2356f6a34863" sha1="d9f92af296360772e62caa4cb276de3fa74f5538"/>
+	</game>
+</datafile>
