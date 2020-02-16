@@ -20,7 +20,7 @@ If you have Mednafen and a fresh RAR archive from an ad revenue financed rom sit
 * Imports your games to a formatted directory structure
 * Merges tracks into single binary blob using [binmerge](https://github.com/putnam/binmerge)
 * Generates CU2 files using [cue2cu2](https://github.com/NRGDEAD/Cue2cu2)
-* Generates mutlidisk files
+* Generates multidisc files
 
 ## Future Features Maybe
 
@@ -33,7 +33,7 @@ If you have Mednafen and a fresh RAR archive from an ad revenue financed rom sit
 With the proper Python 3 in your shell:
 
 ```sh
-$ psiorganizer -i ~/roms/playstation/ntsc-u -o /dev/sdb1 -d ../lib/discs.json -m ../lib/hashes.json
+$ ./main.py -i ~/roms/playstation/ntsc-u -o /dev/sdb1 -d ../lib/discs.json -m ../lib/hashes.json
 ```
 
 Input `-i` is where your games are.  
@@ -48,7 +48,7 @@ This turn this mess:
 
 ```
 ~/Downloads
-  Top 10 PSX Games + ePSXe & ESSENTIAL PLUGINS (2.1)/
+  Top 10 PSX Games + ePSXe & ESSENTIAL PLUGINS (2.1)/ <-- Actually the 20150524 set
     roms/
       Game_title/
         game.title.disc1.cue
