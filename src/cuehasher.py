@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-from binmerge import binmerge
 import glob
 import hashlib
 import json
@@ -40,7 +39,8 @@ def md5(file):
 # Game Metadata
 
 def stripped_game_name(input):
-    return input.split('(Disc ')[0].rstrip()
+    basename = os.path.splitext(input)[0]
+    return basename.split('(Disc ')[0].rstrip()
 
 def game_disc(input):
     split_input = input.split('(Disc ')
@@ -64,14 +64,16 @@ def process_directory(directory, games):
                 hash = md5(os.path.abspath(path + '/' + file))
                 name = stripped_game_name(file)
                 disc = game_disc(file)
-                total = discs['games'][name]['discs']
-                games['hashes'][hash] = {}
-                games['hashes'][hash]['name'] = name
-                games['hashes'][hash]['disc'] = {}
-                games['hashes'][hash]['disc']['number'] = disc
-                games['hashes'][hash]['disc']['total'] = total
+                if name in discs['games']:
+                    total = discs['games'][name]['discs']
+                    games['hashes'][hash] = {}
+                    games['hashes'][hash]['name'] = name
+                    games['hashes'][hash]['disc'] = {}
+                    games['hashes'][hash]['disc']['number'] = disc
+                    games['hashes'][hash]['disc']['total'] = total
+                else:
+                    print(name + ' not in database FUCK')
 # Main
-
 games = {}
 games['hashes'] = {}
 with open(os.path.abspath('hashes.json'), 'w') as output_file:
